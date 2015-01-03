@@ -1,7 +1,7 @@
 /*
  * cs170 -- Rich wolski
  * producer-consumer example
- * uses condition variables for fule/empty conditions
+ * uses condition variables for full/empty conditions
  */
 #include <unistd.h>
 #include <stdlib.h>

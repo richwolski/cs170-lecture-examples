@@ -227,7 +227,8 @@ void *ClientThread(void *arg)
 			pthread_mutex_unlock(&(ca->order_que->lock));
 
 			/*
-			 * spin waiting until the order is fulfilled
+			 * wait using condition variable until
+			 * order is fulfilled
 			 */
 			pthread_mutex_lock(&order->lock);
 			while(order->fulfilled == 0) {
