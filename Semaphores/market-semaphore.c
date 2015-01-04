@@ -30,6 +30,7 @@ struct order_que
 	int size;
 	int head;
 	int tail;
+	sema *mutex;
 	sema *full;
 	sema *empty;
 };
@@ -85,6 +86,7 @@ struct order_que *InitOrderQue(int size)
 	}
 	memset(oq->orders,0,size*sizeof(struct order *));
 
+	oq->mutex = InitSem(1);
 	oq->full = InitSem(size);
 	oq->empty = InitSem(0);
 
@@ -98,6 +100,7 @@ void FreeOrderQue(struct order_que *oq)
 		oq->tail = (oq->tail + 1) % oq->size;
 	}
 
+	FreeSem(oq->mutex);
 	FreeSem(oq->full);
 	FreeSem(oq->empty);
 	free(oq->orders);
@@ -204,6 +207,10 @@ void *ClientThread(void *arg)
 		 * queue it for the traders
 		 */
 		P(ca->order_que->full);
+		/*
+		 * lock the queue
+		 */
+		P(ca->order_que->mutex);
 		next = (ca->order_que->head + 1) % ca->order_que->size;
 		/*
 		 * there is space in the queue, add the order and bump
@@ -223,6 +230,10 @@ void *ClientThread(void *arg)
 		 * signal traders that there is another order
 		 */
 		V(ca->order_que->empty);
+		/*
+		 * unlock the queue
+		 */
+		V(ca->order_que->mutex);
 		/*
 		 * wait until the order is fulfilled
 		 */
@@ -260,6 +271,10 @@ void *TraderThread(void *arg)
 		}
 
 		/*
+		 * lock the que
+		 */
+		P(ta->order_que->mutex);
+		/*
 		 * get the next order
 		 */
 		next = (ta->order_que->tail + 1) % ta->order_que->size;
@@ -269,6 +284,10 @@ void *TraderThread(void *arg)
 		 * tell the clients there is another free slot
 		 */
 		V(ta->order_que->full);
+		/*
+		 * unlock the que
+		 */
+		V(ta->order_que->mutex);
 		/*
 		 * have an order to process
 		 */
