@@ -1,17 +1,17 @@
-CC=gcc
-CFLAGS=-g
+CC=gcc -m32
+KLIB=/cs/faculty/rich/cs170/lib/libkt.a
+FLIB=/cs/faculty/rich/cs170/lib/libfdr.a
+KINC=/cs/faculty/rich/cs170/include
+CFLAGS=-g -I${KINC}
 
-all: market-semaphore
+all: market-kthreads
 
-market-semaphore: market-semaphore.c c-timer.h c-timer.o sema.h sema.o
-	${CC} ${CFLAGS} -o market-semaphore market-semaphore.c c-timer.o sema.o -lpthread
+market-kthreads: market-kthreads.c c-timer.h c-timer.o 
+	${CC} ${CFLAGS} -o market-kthreads market-kthreads.c c-timer.o ${KLIB} ${FLIB}
 
 c-timer.o: c-timer.c c-timer.h
 	${CC} ${CFLAGS} -c c-timer.c
 
-sema.o: sema.c sema.h
-	${CC} ${CFLAGS} -c sema.c
-
 clean:
-	rm -f market-semaphore *.o
+	rm -f market-kthreads *.o
 

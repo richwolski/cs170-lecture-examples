@@ -164,7 +164,7 @@ struct trader_arg
 	int verbose;
 };
 
-void *ClientThread(void *arg)
+void ClientThread(void *arg)
 {
 	struct client_arg *ca = (struct client_arg *)arg;
 	int i;
@@ -226,10 +226,10 @@ void *ClientThread(void *arg)
 		FreeOrder(order);
 	}
 
-	return(NULL);
+	return;
 }
 
-void *TraderThread(void *arg)
+void TraderThread(void *arg)
 {
 	struct trader_arg *ta = (struct trader_arg *)arg;
 	int dequeued;
@@ -286,7 +286,7 @@ void *TraderThread(void *arg)
 		V_kt_sem(order->fulfilled);
 	}
 
-	return(NULL);
+	return;
 }
 
 #define ARGS "c:t:o:q:s:V"
@@ -394,7 +394,7 @@ int main(int argc, char **argv)
 		ca[i].order_que = order_que;
 		ca[i].verbose = verbose;
 		client_ids[i] = kt_fork(ClientThread,(void *)&ca[i]);
-		if(err != 0) {
+		if(client_ids[i] == NULL) {
 			fprintf(stderr,"client thread create %d failed\n",i);
 			exit(1);
 		}
@@ -408,7 +408,7 @@ int main(int argc, char **argv)
 		ta[i].done = &done;
 		ta[i].verbose = verbose;
 		trader_ids[i] = kt_fork(TraderThread,(void *)&ta[i]);
-		if(err != 0) {
+		if(trader_ids[i] == NULL) {
 			fprintf(stderr,"trader thread create %d failed\n",i);
 			exit(1);
 		}
@@ -419,24 +419,16 @@ int main(int argc, char **argv)
 	 */
 	for(i=0; i < client_threads; i++) {
 		kt_join(client_ids[i]);
-		if(err != 0) {
-			fprintf(stderr,"client join %d failed\n",i);
-			exit(1);
-		}
 	}
 
 	/*
 	 * tell the traders we are done
 	 */
 	done = 1;
-	V(order_que->empty);
+	V_kt_sem(order_que->empty);
 
 	for(i=0; i < trader_threads; i++) {
 		kt_join(trader_ids[i]);
-		if(err != 0) {
-			fprintf(stderr,"trader join %d failed\n",i);
-			exit(1);
-		}
 	}
 	end = CTimer();
 
