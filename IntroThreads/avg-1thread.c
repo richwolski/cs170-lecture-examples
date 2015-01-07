@@ -162,6 +162,11 @@ int main(int argc, char **argv)
 	 */
 	free(result);
 
+	/*
+	 * free the data array -- it wasn't freed in the sum thread
+	 */
+	free(data);
+
 	return(0);
 }
 
