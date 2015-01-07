@@ -274,6 +274,10 @@ int main(int argc, char **argv)
 	 * free the thread id array
 	 */
 	free(thread_ids);
+	/*
+	 * free the data array
+	 */
+	free(data);
 
 	return(0);
 }
