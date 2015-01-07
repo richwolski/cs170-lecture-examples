@@ -224,6 +224,10 @@ void ClientThread(void *arg)
 		 * done, free the order and repeat
 		 */
 		FreeOrder(order);
+		/*
+ 		 * let another thread run
+ 		 */
+		kt_yield();
 	}
 
 	return;
@@ -284,6 +288,10 @@ void TraderThread(void *arg)
 		 * tell the client the order is done
 		 */
 		V_kt_sem(order->fulfilled);
+		/*
+		 * let another thread run
+		 */
+		kt_yield();	
 	}
 
 	return;
