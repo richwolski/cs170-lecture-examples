@@ -1,6 +1,6 @@
 CC = gcc
 
-EXECUTABLES = p1 p2 p3 p4
+EXECUTABLES = p1 p2 p3 p4 pointer1 pointer2 in-out
 
 CFLAGS = -g
 
@@ -29,5 +29,14 @@ p3: p2.c libmylib.a
 
 p4: p2.c libmylib.a
 	$(CC) $(CFLAGS) -o p4 p2.c -L. -lmylib
+
+pointer1: pointer1.c
+	$(CC) $(CFLAGS) -o pointer1 pointer1.c
+
+pointer2: pointer2.c
+	$(CC) $(CFLAGS) -o pointer2 pointer2.c
+
+in-out: in-out.c
+	$(CC) $(CFLAGS) -o in-out in-out.c
 
 
