@@ -1,6 +1,6 @@
 CC = gcc
 
-EXECUTABLES = p1 p2 p3 p4 pointer1 pointer2 in-out
+EXECUTABLES = p1 p2 p3 p4 pointer1 pointer2 in-out string1 string2 string3
 
 CFLAGS = -g
 
@@ -38,5 +38,14 @@ pointer2: pointer2.c
 
 in-out: in-out.c
 	$(CC) $(CFLAGS) -o in-out in-out.c
+
+string1: string1.c
+	$(CC) $(CFLAGS) -o string1 string1.c
+
+string2: string2.c
+	$(CC) $(CFLAGS) -o string2 string2.c
+
+string3: string3.c
+	$(CC) $(CFLAGS) -o string3 string3.c
 
 
