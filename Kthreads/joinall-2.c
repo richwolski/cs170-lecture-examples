@@ -141,6 +141,8 @@ int main(int argc, char **argv)
 	free(ta);
 	free(ids);
 
+	printf("final count: %f\n",counter);
+
 	return(0);
 }
 		
