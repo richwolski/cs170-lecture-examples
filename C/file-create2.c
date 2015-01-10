@@ -1,8 +1,8 @@
-#include < unistd.h >
-#include < stdlib.h >
-#include < stdio.h >
-#include < string.h >
-#include < fcntl.h >
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <fcntl.h>
 
 /*
  * open to create a couple of files and write a strings into each
