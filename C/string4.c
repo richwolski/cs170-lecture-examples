@@ -5,6 +5,7 @@
 
 /*
  * do some argument parsing with strncmp() and strncpy()
+ * zero out the buffer
  */
 
 int main(int argc, char **argv)
@@ -17,6 +18,13 @@ int main(int argc, char **argv)
 	int found = 0;
 	int len;
 
+	/*
+	 * zero out the bffer by hand
+	 */
+	for(i=0; i < sizeof(arg1); i++) {
+		arg1[i] = 0;
+	}
+
 	for(i=1; i < argc; i++) {
 		p = argv[i];
 		if(strncmp(p,"arg1:",strlen("arg1:")) == 0) {
@@ -27,10 +35,10 @@ int main(int argc, char **argv)
 			}
 			a = argv[next];
 			strncpy(arg1,a,sizeof(arg1));
-			len = strlen(a);
-			if(len >= sizeof(arg1)) {
-				len = sizeof(arg1) - 1;
-			}
+			/*
+			 * punch zero in at the end just to be sure
+			 */
+			len = sizeof(arg1) - 1;
 			arg1[len] = 0;
 			found = 1;
 		}

@@ -1,6 +1,6 @@
 CC = gcc
 
-EXECUTABLES = p1 p2 p3 p4 pointer1 pointer2 in-out string1 string2 string3
+EXECUTABLES = p1 p2 p3 p4 pointer1 pointer2 in-out string1 string2 string3 string4 sys-call1 file-create1 file-create2
 
 CFLAGS = -g
 
@@ -48,4 +48,15 @@ string2: string2.c
 string3: string3.c
 	$(CC) $(CFLAGS) -o string3 string3.c
 
+string4: string4.c
+	$(CC) $(CFLAGS) -o string4 string4.c
+
+sys-call1: sys-call1.c
+	$(CC) $(CFLAGS) -o sys-call1 sys-call1.c
+
+file-create1: file-create1.c
+	$(CC) $(CFLAGS) -o file-create1 file-create1.c
+
+file-create2: file-create2.c
+	$(CC) $(CFLAGS) -o file-create2 file-create2.c
 
