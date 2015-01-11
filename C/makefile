@@ -1,6 +1,6 @@
 CC = gcc
 
-EXECUTABLES = p1 p2 p3 p4 pointer1 pointer2 in-out string1 string2 string3 string4 sys-call1 file-create1 file-create2
+EXECUTABLES = p1 p2 p3 p4 pointer1 pointer2 in-out string1 string2 string3 string4 sys-call1 file-create1 file-create2 file-read1 file-read2 file-seek1
 
 CFLAGS = -g
 
@@ -59,4 +59,13 @@ file-create1: file-create1.c
 
 file-create2: file-create2.c
 	$(CC) $(CFLAGS) -o file-create2 file-create2.c
+
+file-read1: file-read1.c
+	$(CC) $(CFLAGS) -o file-read1 file-read1.c
+
+file-read2: file-read2.c
+	$(CC) $(CFLAGS) -o file-read2 file-read2.c
+
+file-seek1: file-seek1.c
+	$(CC) $(CFLAGS) -o file-seek1 file-seek1.c
 

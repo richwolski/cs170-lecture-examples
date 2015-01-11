@@ -47,7 +47,7 @@ int main(int argc, char **argv)
 	/*
 	 * try and open the first file for creation
 	 */
-	fd1 = open(file_name1,O_CREAT | O_WRONLY);
+	fd1 = open(file_name1,O_CREAT | O_WRONLY, 0600);
 	if(fd1 < 0) {
 		printf("failed to open %s for creation\n",file_name1);
 		exit(1);
@@ -56,7 +56,7 @@ int main(int argc, char **argv)
 	/*
 	 * and the second
 	 */
-	fd2 = open(file_name2,O_CREAT | O_WRONLY);
+	fd2 = open(file_name2,O_CREAT | O_WRONLY,  0600);
 	if(fd2 < 0) {
 		printf("failed to open %s for creation\n",file_name2);
 		close(fd1);

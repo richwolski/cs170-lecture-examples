@@ -38,7 +38,7 @@ int main(int argc, char **argv)
 	/*
 	 * try and open the file for creation
 	 */
-	my_file_desc = open(file_name,O_CREAT | O_WRONLY);
+	my_file_desc = open(file_name,O_CREAT | O_WRONLY,0600);
 	if(my_file_desc < 0) {
 		printf("failed to open %s for creation\n",file_name);
 		exit(1);
