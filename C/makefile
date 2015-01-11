@@ -1,6 +1,6 @@
 CC = gcc
 
-EXECUTABLES = p1 p2 p3 p4 pointer1 pointer2 in-out string1 string2 string3 string4 sys-call1 file-create1 file-create2 file-read1 file-read2 file-seek1
+EXECUTABLES = p1 p2 p3 p4 pointer1 pointer2 in-out string1 string2 string3 string4 sys-call1 file-create1 file-create2 file-read1 file-read2 file-seek1 mem1 mem2 mem3 mem4 mem5 mem6 mem7
 
 CFLAGS = -g
 
@@ -68,4 +68,25 @@ file-read2: file-read2.c
 
 file-seek1: file-seek1.c
 	$(CC) $(CFLAGS) -o file-seek1 file-seek1.c
+
+mem1: mem1.c
+	$(CC) $(CFLAGS) -o mem1 mem1.c
+
+mem2: mem2.c
+	$(CC) $(CFLAGS) -o mem2 mem2.c
+
+mem3: mem3.c
+	$(CC) $(CFLAGS) -o mem3 mem3.c
+
+mem4: mem4.c
+	$(CC) $(CFLAGS) -o mem4 mem4.c
+
+mem5: mem5.c
+	$(CC) $(CFLAGS) -o mem5 mem5.c
+
+mem6: mem6.c
+	$(CC) $(CFLAGS) -o mem6 mem6.c
+
+mem7: mem7.c
+	$(CC) $(CFLAGS) -o mem7 mem7.c
 
