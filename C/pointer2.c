@@ -31,14 +31,19 @@ main(int argc, char *argv[])
 	/*
  	 * now do some math
 	 */
-	*i = *i + 5;
-	printf("i: %p *i: %d after integer add\n",i,*i);
+	i_stack = *i + 5;
+        printf("I_stack after integer add: %d\n",i_stack);
 
+	*i = 2.71828;
+        printf("I_global after fp store: %d\n",I_global);
+
+	*i = *i + 15;
+	printf("i: %p *i: %d after integer add of 15\n",i,*i);
 
 	i = &I_global;
 	i = i + 10;
 
-	printf("i: %p, I_global: %d\n",i,I_global);
+	printf("i: %p, I_global: %d after pointer add\n",i,I_global);
 
 
 
