@@ -46,7 +46,7 @@ int main(int argc, char **argv)
 	
 	string = "a string written to standard out\n";
 	write(1,string,strlen(string));
-	
+
 	close(my_file_desc);
 
 	return(0);

@@ -1,6 +1,6 @@
 CC = gcc
 
-EXECUTABLES = p1 p2 p3 p4 pointer1 pointer2 pointer-array pointer-pointer in-out string1 string2 string3 string4 sys-call1 sys-call2 file-create1 file-create2 file-read1 file-read2 file-seek1 file-fd1 mem1 mem2 mem3 mem4 mem5 mem6 mem7 
+EXECUTABLES = p1 p2 p3 p4 pointer1 pointer2 pointer-array pointer-pointer in-out string1 string2 string3 string4 sys-call1 sys-call2 file-create1 file-create2 file-read1 file-read2 file-seek1 file-fd1 file-fd2 file-fd3 mem1 mem2 mem3 mem4 mem5 mem6 mem7 fork-1 fork-2 fork-3 fork-4
 
 CFLAGS = -g
 
@@ -78,8 +78,16 @@ file-read2: file-read2.c
 file-seek1: file-seek1.c
 	$(CC) $(CFLAGS) -o file-seek1 file-seek1.c
 
-file-seek1: file-fd1.c
+file-fd1: file-fd1.c
 	$(CC) $(CFLAGS) -o file-fd1 file-fd1.c
+
+file-fd2: file-fd2.c
+	$(CC) $(CFLAGS) -o file-fd2 file-fd2.c
+
+file-fd3: file-fd3.c
+	$(CC) $(CFLAGS) -o file-fd3 file-fd3.c
+
+
 
 mem1: mem1.c
 	$(CC) $(CFLAGS) -o mem1 mem1.c
@@ -101,4 +109,16 @@ mem6: mem6.c
 
 mem7: mem7.c
 	$(CC) $(CFLAGS) -o mem7 mem7.c
+
+fork-1: fork-1.c
+	$(CC) $(CFLAGS) -o fork-1 fork-1.c
+
+fork-2: fork-2.c
+	$(CC) $(CFLAGS) -o fork-2 fork-2.c
+
+fork-3: fork-3.c
+	$(CC) $(CFLAGS) -o fork-3 fork-3.c
+
+fork-4: fork-4.c
+	$(CC) $(CFLAGS) -o fork-4 fork-4.c
 
