@@ -68,7 +68,7 @@ struct order_que *InitOrderQue(int size)
 	memset(oq,0,sizeof(struct order_que));
 
 	oq->size = size+1; /* empty condition burns a slot */
-	oq->orders = (struct order **)malloc(size*sizeof(struct order *));
+	oq->orders = (struct order **)malloc(oq->size*sizeof(struct order *));
 	if(oq->orders == NULL) {
 		free(oq);
 		return(NULL);
