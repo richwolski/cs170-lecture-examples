@@ -45,6 +45,14 @@ int main(int argc, char **argv)
 			string);
 		write(pipe_desc[1],string,strlen(string));
 		/*
+		 * and another string
+		 */
+		string = "and another string";
+		printf("pid: %d -- writing %s to pipe_desc[1]\n",
+			(int)my_id,
+			string);
+		write(pipe_desc[1],string,strlen(string));
+		/*
 		 * close the pipe to let the read end know we are
 		 * done
 		 */

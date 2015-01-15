@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <fcntl.h>
+#include <sys/wait.h>
 
 /*
  * simple program creating a pipe between two processes
@@ -14,6 +15,8 @@ int main(int argc, char **argv)
 	int pipe_desc[2];
 	char *string;
 	char read_buffer[4096];
+	int child_status;
+	int err;
 
 	/*
 	 * create the pipe
@@ -47,22 +50,25 @@ int main(int argc, char **argv)
 		 * close the pipe to let the read end know we are
 		 * done
 		 */
+		close(pipe_desc[1]);
+		/*
+		 * wait for the child to exit
+		 */
+		wait(&child_status);
 	} else {
 		/*
-		 * child will read until pipe closes
-		 * close the write end
+		 * child reads the read end
 		 */
 		my_id = getpid();
+		/*
+		 * doesn't need the write end
+		 */
 		close(pipe_desc[1]);
 		memset(read_buffer,0,sizeof(read_buffer));
-		while(read(pipe_desc[0],read_buffer,sizeof(read_buffer))) {
-			printf("pid: %s -- received %s from parent\n",
-				(int)my_pid,
+		read(pipe_desc[0],read_buffer,sizeof(read_buffer));
+		printf("pid: %d -- received %s from parent\n",
+				(int)my_id,
 				read_buffer);
-			memset(read_buffer,0,sizeof(read_buffer));
-		}
-		printf("pid: %d -- child detects write end closed\n",
-			(int)my_pid);
 		close(pipe_desc[0]);
 	}
 
