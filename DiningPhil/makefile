@@ -20,6 +20,9 @@ dphil_3.o: dphil.h
 dphil_4.o: dphil.h
 dphil_5.o: dphil.h
 dphil_6.o: dphil.h
+dphil_7.o: dphil.h
+dphil_8.o: dphil.h
+dphil_9.o: dphil.h
 
 dphil_1: dphil_1.o dphil_skeleton.o 
 	$(CC) $(CFLAGS) -o dphil_1 dphil_skeleton.o dphil_1.o -lpthread
@@ -38,3 +41,12 @@ dphil_5: dphil_5.o dphil_skeleton.o
 
 dphil_6: dphil_6.o dphil_skeleton.o $(DLOBJ)
 	$(CC) $(CFLAGS) -o dphil_6 dphil_skeleton.o dphil_6.o $(DLOBJ) -lpthread
+
+dphil_7: dphil_7.o dphil_skeleton.o $(DLOBJ)
+	$(CC) $(CFLAGS) -o dphil_7 dphil_skeleton.o dphil_7.o $(DLOBJ) -lpthread
+
+dphil_8: dphil_8.o dphil_skeleton.o $(DLOBJ)
+	$(CC) $(CFLAGS) -o dphil_8 dphil_skeleton.o dphil_7.o $(DLOBJ) -lpthread
+
+dphil_9: dphil_9.o dphil_skeleton.o $(DLOBJ)
+	$(CC) $(CFLAGS) -o dphil_9 dphil_skeleton.o dphil_7.o $(DLOBJ) -lpthread
