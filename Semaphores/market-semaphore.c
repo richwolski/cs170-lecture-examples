@@ -267,7 +267,7 @@ void *TraderThread(void *arg)
 		 */
 		if(*(ta->done) == 1) {
 			V(ta->order_que->empty);
-			return;
+			return(NULL);
 		}
 
 		/*
