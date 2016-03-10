@@ -4,32 +4,30 @@
 #include <stdio.h>
 
 #include <pthread.h>
+#include "sema.h"
 
 
-typedef struct
+sema *InitSem(int count)
 {
-        pthread_mutex_t lock;
-        pthread_cond_t wait;
-        int value;
-	int waiters;
-} sema;
+	sema *s;
 
-void InitSem(sema *s, int count)
-{
+	s = (sema *)malloc(sizeof(sema));
+	if(s == NULL) {
+		return(NULL);
+	}
 	s->value = count;
 	s->waiters = 0;
 	pthread_cond_init(&(s->wait),NULL);
 	pthread_mutex_init(&(s->lock),NULL);
 
-	return;
+	return(s);
 }
-
 
 void FreeSem(sema *s)
 {
 	free(s);
-	return;
 }
+
 void P(sema *s)
 {
 	pthread_mutex_lock(&(s->lock));

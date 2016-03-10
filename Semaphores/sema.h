@@ -7,7 +7,8 @@ struct sem
 {
         pthread_mutex_t lock;
         pthread_cond_t wait;
-        int count;
+        int value;
+	int waiters;
 };
 
 typedef struct sem sema;
