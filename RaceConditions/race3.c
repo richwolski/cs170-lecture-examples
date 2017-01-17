@@ -65,7 +65,7 @@ main(int argc, char **argv)
 	tid = (pthread_t *) malloc(sizeof(pthread_t) * nthreads);
 	attr = (pthread_attr_t *) malloc(sizeof(pthread_attr_t) * nthreads);
 	t = (Thread_struct *) malloc(sizeof(Thread_struct) * nthreads);
-	s = (char *) malloc(sizeof(char *) * size);
+	s = (char *) malloc(sizeof(char) * size);
 
 	for (i = 0; i < nthreads; i++) 
 	{
