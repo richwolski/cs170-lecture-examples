@@ -13,7 +13,7 @@ void *kt_self();
  * func: entry point for the new thread
  * arg: single argument to be passed
  */
-void *kt_fork(void (*func)(void *), void *arg);
+void *kt_fork(void *(*func)(void *), void *arg);
 
 /*
  * kt_join() blocks waiting for the completion of the thread specified

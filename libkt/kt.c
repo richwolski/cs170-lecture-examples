@@ -93,7 +93,7 @@ struct kt_sem_str
 
 struct kt_str
 {
-	void (*func)();		/* function to call */
+	void *(*func)(void *);	/* function to call */
 	void *arg;		/* arg to pass that function */
         int tid;                /* Unique thread id */
 	int state;		/* queue state */
@@ -128,7 +128,7 @@ static K_t ktOriginal;			/* global for main thread */
 
 
   
-K_t InitKThread(int stack_size, void (*func)(), void *arg)
+K_t InitKThread(int stack_size, void *(*func)(void *), void *arg)
 {
 	K_t kt;
 	void *stack = NULL;
@@ -548,7 +548,7 @@ start:
  * fork a thread and make it runnable
  */
 void *
-kt_fork(void (*func)(), void *arg)
+kt_fork(void *(*func)(void *), void *arg)
 {
 	K_t kt;
 
