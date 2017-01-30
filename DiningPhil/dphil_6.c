@@ -59,7 +59,7 @@ void pickup(Phil_struct *ps)
   
   pthread_mutex_lock(pp->mon);
   if (dll_empty(pp->q) && 
-		  pp->state[((ps->id+1)+(phil_count-1))%phil_count] != EATING &&
+		  pp->state[((ps->id+1))%phil_count] != EATING &&
                      pp->state[(ps->id+(phil_count-1))%phil_count] != EATING) {
     pp->state[ps->id] = EATING;
   } else {

@@ -24,7 +24,7 @@ struct thread_arg
 /*
  * bumps the shared counter by 1 each time it is enabled
  */
-void PingPongThread(void *arg)
+void *PingPongThread(void *arg)
 {
 	struct thread_arg *ta = (struct thread_arg *)arg;
 	int i;
@@ -43,7 +43,7 @@ void PingPongThread(void *arg)
 	*(ta->finished) = *(ta->finished) + 1;
 
 	kt_exit();
-	return;
+	return(NULL);
 }
 
 #define ARGS "t:VC:"
