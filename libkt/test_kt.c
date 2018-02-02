@@ -9,11 +9,12 @@ void *t2;
 
 kt_sem s1;
 
-void foo()
+void *foo()
 {
 	fprintf(stdout,"foo called, exiting\n");
 	fflush(stdout);
 	kt_exit();
+	return(NULL);
 }
 
 void goo()
@@ -25,8 +26,7 @@ void goo()
 	fflush(stdout);
 }
 
-void
-Thread_1(void *arg)
+void *Thread_1(void *arg)
 {
 	fprintf(stdout,"I am thread 1 and I'm printing: %s\n",arg);
 	fflush(stdout);
@@ -36,11 +36,10 @@ Thread_1(void *arg)
 	fprintf(stdout,"I am thread 1 and I've joined t2\n");
 	fflush(stdout);
 
-	return;
+	return(NULL);
 }
 
-void
-Thread_2(void *arg)
+void *Thread_2(void *arg)
 {
 	fprintf(stdout,"I am thread 2 and I'm printing: %s\n",arg);
 	fflush(stdout);
@@ -50,20 +49,23 @@ Thread_2(void *arg)
 
 	goo();
 
-	return;
+	kt_exit();
+
+	return(NULL);
 }
 
-void
-Thread_3(void *arg)
+void *Thread_3(void *arg)
 {
 	fprintf(stdout,"I am thread 3 and I'm printing: %s\n",arg);
 	fflush(stdout);
 
+	kt_exit();
 
-	return;
+
+	return(NULL);
 }
 
-void Thread_4(void *arg)
+void *Thread_4(void *arg)
 {
 	kt_sem s = (kt_sem)arg;
 
@@ -76,10 +78,11 @@ void Thread_4(void *arg)
 		"I'm thread 4 and I'm back from synching with thread 5\n");
 	fflush(stdout);
 
-	return;
+	kt_exit();
+	return(NULL);
 }
 
-void Thread_5(void *arg)
+void *Thread_5(void *arg)
 {
 	kt_sem s = (kt_sem)arg;
 
@@ -94,10 +97,11 @@ void Thread_5(void *arg)
 
 	V_kt_sem(s1);
 
-	return;
+	kt_exit();
+	return(NULL);
 }
 
-void Sleep_T1(void *arg)
+void *Sleep_T1(void *arg)
 {
 	int now = time(0);
 
@@ -119,10 +123,10 @@ void Sleep_T1(void *arg)
 
 	kt_exit();
 
-	return;
+	return(NULL);
 }
 
-void Sleep_T2(void *arg)
+void *Sleep_T2(void *arg)
 {
 	int now = time(0);
 
@@ -144,10 +148,10 @@ void Sleep_T2(void *arg)
 
 	kt_exit();
 
-	return;
+	return(NULL);
 }
 
-void Y1(void *arg)
+void *Y1(void *arg)
 {
 	int i;
 
@@ -165,9 +169,11 @@ void Y1(void *arg)
 	for(i=0; i < 10000000; i++);
 
 	kt_exit();
+
+	return(NULL);
 }
 
-void Y2(void *arg)
+void *Y2(void *arg)
 {
 	int i;
 
@@ -185,25 +191,26 @@ void Y2(void *arg)
 	for(i=0; i < 10000000; i++);
 
 	kt_exit();
+	return(NULL);
 }
 
-void Forkee(void *arg)
+void *Forkee(void *arg)
 {
 	kt_exit();
-	return;
+	return(NULL);
 }
 
-void Forker(void *arg)
+void *Forker(void *arg)
 {
 	void *t;
 	t = kt_fork(Forkee,NULL);
 	kt_join(t);
 
 	kt_exit();
-	return;
+	return(NULL);
 }
 
-void Per(void *a)
+void *Per(void *a)
 {
 	int i;
 
@@ -213,9 +220,10 @@ void Per(void *a)
 	}
 
 	kt_exit();
+	return(NULL);
 }
 
-void Ver(void *a)
+void *Ver(void *a)
 {
 	int i;
 
@@ -225,6 +233,7 @@ void Ver(void *a)
 	}
 
 	kt_exit();
+	return(NULL);
 }
 
 
