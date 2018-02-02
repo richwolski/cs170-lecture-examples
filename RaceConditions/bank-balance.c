@@ -36,7 +36,15 @@ int main(int argc, char **argv)
 	fflush(stdout);
 
 	err = pthread_create(&t1,NULL,ATMThread,NULL);
+	if(err < 0) {
+		fprintf(stderr,"couldn't create first thread\n");
+		exit(1);
+	}
 	err = pthread_create(&t2,NULL,ATMThread,NULL);
+	if(err < 0) {
+		fprintf(stderr,"couldn't create second thread\n");
+		exit(1);
+	}
 
 	pthread_join(t1,NULL);
 	pthread_join(t2,NULL);
