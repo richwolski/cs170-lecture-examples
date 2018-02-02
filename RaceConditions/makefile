@@ -1,6 +1,6 @@
 CC = gcc
 
-EXECUTABLES = race1 race2 race3 race_ABC
+EXECUTABLES = race1 race2 race3 race_ABC bank-balance bank-balance-lock
 
 CSDIR = /cs/faculty/rich/public_html/class/cs170
 CFLAGS = -g -I$(CSDIR)/include -Wall
@@ -28,4 +28,10 @@ race3: race3.o
 
 race_ABC: race_ABC.o
 	$(CC) $(CFLAGS) -o race_ABC race_ABC.o -lpthread
+
+bank-balance: bank-balance.o
+	$(CC) $(CFLAGS) -o bank-balance bank-balance.o -lpthread
+
+bank-balance-lock: bank-balance-lock.o
+	$(CC) $(CFLAGS) -o bank-balance-lock bank-balance-lock.o -lpthread
 
