@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-g
+CFLAGS=-O2
 
 all: market1 market2 market3 market4
 
