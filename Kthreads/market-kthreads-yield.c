@@ -164,7 +164,7 @@ struct trader_arg
 	int verbose;
 };
 
-void ClientThread(void *arg)
+void *ClientThread(void *arg)
 {
 	struct client_arg *ca = (struct client_arg *)arg;
 	int i;
@@ -230,10 +230,10 @@ void ClientThread(void *arg)
 		kt_yield();
 	}
 
-	return;
+	return(NULL);
 }
 
-void TraderThread(void *arg)
+void *TraderThread(void *arg)
 {
 	struct trader_arg *ta = (struct trader_arg *)arg;
 	int dequeued;
@@ -294,7 +294,7 @@ void TraderThread(void *arg)
 		kt_yield();	
 	}
 
-	return;
+	return(NULL);
 }
 
 #define ARGS "c:t:o:q:s:V"
