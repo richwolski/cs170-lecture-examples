@@ -47,13 +47,14 @@ void *SumThread(void *arg)
 	fflush(stdout);
 
 	my_args = (struct arg_struct *)arg;
+	my_size = my_args->size;
+	my_data = my_args->data;
+
 	result = (struct result_struct *)malloc(sizeof(struct result_struct));
 	if(result == NULL) {
 		exit(1);
 	}
 
-	my_size = my_args->size;
-	my_data = my_args->data;
 
 	/*
 	 * free the arg structure since it isn't needed any more
