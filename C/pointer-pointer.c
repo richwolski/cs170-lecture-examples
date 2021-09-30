@@ -14,6 +14,7 @@ main(int argc, char *argv[])
 	B = &A;
 	C = &B;
 
+	printf("&A: %p, &B: %p, &C: %p\n",&A,&B,&C);
 	printf("A: %d, B: %p, C: %p\n",A,B,C);
 	printf("A: %d, B: %p, *C: %p\n",A,B,*C);
 	printf("A: %d, *B: %d, **C: %d\n",A,*B,**C);
