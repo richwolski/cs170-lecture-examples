@@ -1,5 +1,7 @@
 CC=gcc
-CFLAGS=-O2
+# need to set optimization flag to -g or Linux gcc will optimize away the spin
+# wait in client threads
+CFLAGS=-g
 
 all: market1 market2 market3 market4
 
@@ -18,3 +20,5 @@ market4: market4.c c-timer.h c-timer.o
 c-timer.o: c-timer.c c-timer.h
 	${CC} ${CFLAGS} -c c-timer.c
 
+clean:
+	rm -f *.o market1 market2 market3 market4
