@@ -15,6 +15,10 @@ sema *InitSem(int count)
 	if(s == NULL) {
 		return(NULL);
 	}
+	if(count < 0) {
+		free(s);
+		return(NULL);
+	}
 	s->value = count;
 	s->waiters = 0;
 	pthread_cond_init(&(s->wait),NULL);
