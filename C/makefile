@@ -1,6 +1,6 @@
 CC = gcc
 
-EXECUTABLES = p1 p2 p3 p4 pointer1 pointer2 pointer-array pointer-pointer in-out string1 string2 string3 string4 sys-call1 sys-call2 file-create1 file-create2 file-read1 file-read2 file-seek1 file-fd1 file-fd2 file-fd3 mem1 mem2 mem3 mem4 mem5 mem6 mem7 fork-1 fork-2 fork-3 fork-4 pipe-1 pipe-2 pipe-3 my-cat my-cat2 pipe-4 file-read-write
+EXECUTABLES = p1 p2 p3 p4 pointer1 pointer2 pointer-array pointer-pointer in-out string1 string2 string3 string4 sys-call1 sys-call2 file-create1 file-create2 file-read1 file-read2 file-seek1 file-fd1 file-fd2 file-fd3 mem1 mem2 mem3 mem4 mem5 mem6 mem7 fork-1 fork-2 fork-3 fork-4 pipe-1 pipe-2 pipe-3 my-cat my-cat2 my-cat-noprint pipe-4 file-read-write stat-print
 
 CFLAGS = -g
 
@@ -141,6 +141,12 @@ my-cat: my-cat.c
 
 my-cat2: my-cat2.c
 	$(CC) $(CFLAGS) -o my-cat2 my-cat2.c
+
+my-cat-noprint: my-cat-noprint.c
+	$(CC) $(CFLAGS) -o my-cat-noprint my-cat-noprint.c
+
+stat-print: stat-print.c
+	$(CC) $(CFLAGS) -o stat-print stat-print.c
 
 perms:
 	chmod 755 $(EXECUTABLES)
