@@ -38,7 +38,7 @@ void P(sema *s)
 		/*
 		 * maintain semaphore invariant
 		 */
-		if(s->waiters < (-1 * s->value)) {
+		while(s->waiters < (-1 * s->value)) {
 			s->waiters++;
 			pthread_cond_wait(&(s->wait),&(s->lock));
 			s->waiters--;

@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-O2
+CFLAGS=-g
 
 all: market1 market2 market3 market4
 
@@ -17,4 +17,7 @@ market4: market4.c c-timer.h c-timer.o
 
 c-timer.o: c-timer.c c-timer.h
 	${CC} ${CFLAGS} -c c-timer.c
+
+clean: 
+	rm -f market1 market2 market3 market4
 
