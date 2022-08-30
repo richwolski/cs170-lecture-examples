@@ -4,7 +4,7 @@ CC = gcc
 
 KHOME=.
 
-all: $(KHOME)/libfdr.a example-dllist my_jval_1 my_jval_2 my_jval_weird
+all: $(KHOME)/libfdr.a example-dllist my_jval_1 my_jval_2 my_jval_weird my_jval_good
 
 OBJS = fields.o jrb.o jval.o dllist.o
 
@@ -36,6 +36,9 @@ my_jval_2: $(KHOME)/libfdr.a my_jval_2.c
 
 my_jval_weird: $(KHOME)/libfdr.a my_jval_weird.c
 	$(CC) $(CFLAGS) -o my_jval_weird my_jval_weird.c $(KHOME)/libfdr.a
+
+my_jval_good: $(KHOME)/libfdr.a my_jval_good.c
+	$(CC) $(CFLAGS) -o my_jval_good my_jval_good.c $(KHOME)/libfdr.a
 
 example-dllist: $(KHOME)/libfdr.a example-dllist.c
 	$(CC) $(CFLAGS) -o example-dllist example-dllist.c $(KHOME)/libfdr.a
