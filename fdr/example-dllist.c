@@ -72,4 +72,34 @@ int main(int argc, char **argv)
 		printf("%s ",s);
 	}
 	printf("\n");
+
+	/*
+	 * test to see if the list is empty
+	 */
+	if(dll_empty(list)) {
+		printf("the list is now empty\n");
+	} else {
+		printf("the list is not empty\n");
+	}
+
+	/*
+	 * now delete the two remaining nodes
+	 */
+	dll_delete_node(dll_first(list));
+	dll_delete_node(dll_first(list));
+	/*
+	 * test to see if the list is empty
+	 */
+	if(dll_empty(list)) {
+		printf("the list is now empty\n");
+	} else {
+		printf("the list is not empty\n");
+	}
+
+	/*
+	 * destroy the list
+	 */
+	free_dllist(list);
+
+	exit(0);
 }
