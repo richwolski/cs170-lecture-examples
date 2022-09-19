@@ -30,6 +30,7 @@ struct order_que
 	int size;
 	int head;
 	int tail;
+	int count;
 	pthread_mutex_t lock;
 	pthread_cond_t full;
 	pthread_cond_t empty;
@@ -74,13 +75,14 @@ struct order_que *InitOrderQue(int size)
 	}
 	memset(oq,0,sizeof(struct order_que));
 
-	oq->size = size+1; /* empty condition burns a slot */
+	oq->size = size; 
 	oq->orders = (struct order **)malloc(oq->size*sizeof(struct order *));
 	if(oq->orders == NULL) {
 		free(oq);
 		return(NULL);
 	}
 	memset(oq->orders,0,size*sizeof(struct order *));
+	oq->count = 0;
 
 	pthread_mutex_init(&oq->lock,NULL);
 	pthread_cond_init(&oq->full,NULL);
@@ -91,9 +93,12 @@ struct order_que *InitOrderQue(int size)
 
 void FreeOrderQue(struct order_que *oq)
 {
-	while(oq->head != oq->tail) {
-		FreeOrder(oq->orders[oq->tail]);
-		oq->tail = (oq->tail + 1) % oq->size;
+	int next;
+	while(oq->count > 0) {
+		next = (oq->tail + 1) % oq->size;
+		FreeOrder(oq->orders[next]);
+		oq->tail = next;
+		oq->count -= 1;
 	}
 
 	free(oq->orders);
@@ -199,14 +204,12 @@ void *ClientThread(void *arg)
 		queued = 0;
 		while(queued == 0) {
 			pthread_mutex_lock(&(ca->order_que->lock));
-			next = (ca->order_que->head + 1) % ca->order_que->size;
 			/*
 			 * is the queue full?
 			 */
-			while(next == ca->order_que->tail) {
+			while(ca->order_que->count == ca->order_que->size) {
 				pthread_cond_wait(&(ca->order_que->full),
 						  &(ca->order_que->lock));
-				next = (ca->order_que->head + 1) % ca->order_que->size;
 			}
 			/*
 			 * there is space in the queue, add the order and bump
@@ -220,8 +223,10 @@ void *ClientThread(void *arg)
 					order->quantity,
 					(order->action ? "SELL" : "BUY")); 
 			}
+			next = (ca->order_que->head + 1) % ca->order_que->size;
 			ca->order_que->orders[next] = order;
 			ca->order_que->head = next;
+			ca->order_que->count += 1;
 			queued = 1;
 			pthread_cond_signal(&(ca->order_que->empty));
 			pthread_mutex_unlock(&(ca->order_que->lock));
@@ -261,7 +266,7 @@ void *TraderThread(void *arg)
 			/*
 			 * is the queue empty?
 			 */
-			while(ta->order_que->head == ta->order_que->tail) {
+			while(ta->order_que->count == 0) {
 				/*
 				 * if the queue is empty, are we done?
 				 */
@@ -279,6 +284,7 @@ void *TraderThread(void *arg)
 			next = (ta->order_que->tail + 1) % ta->order_que->size;
 			order = ta->order_que->orders[next];
 			ta->order_que->tail = next;
+			ta->order_que->count -= 1;
 			pthread_cond_signal(&(ta->order_que->full));
 			pthread_mutex_unlock(&(ta->order_que->lock));
 			dequeued = 1;
