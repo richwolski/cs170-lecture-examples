@@ -36,7 +36,7 @@ int main(int argc, char **argv)
 
 	write_fd = open(file_name,O_CREAT | O_WRONLY,0600);
 	if(write_fd < 0) {
-		printf("failed to open %s for writing\n");
+		printf("failed to open %s for writing\n",file_name);
 		exit(1);
 	}
 
