@@ -487,7 +487,9 @@ start:
 			kt->jmpbuf->__jmpbuf[JB_BP] = (REGTYPE)sp;
 			kt->jmpbuf->__jmpbuf[JB_SP] = (REGTYPE)sp-1024;
 			PTR_MANGLE(kt->jmpbuf->__jmpbuf[JB_SP]);
+#ifdef __x86_64__
                         PTR_MANGLE(kt->jmpbuf->__jmpbuf[JB_BP]);
+#endif
 #endif
 
 #ifdef SOLARIS
