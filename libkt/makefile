@@ -1,9 +1,9 @@
 CC = gcc #-m32
-#HOME ?= /cs/faculty/rich/src/cs170.labs
-HOME ?= ..
-CFLAGS =-I$(HOME)/fdr -g -DLINUX 
-#PREFIX ?= /cs/faculty/rich/cs170
-PREFIX ?= ./build
+HOME ?= /cs/faculty/rich/src/cs170.labs
+#HOME ?= ..
+CFLAGS =-I$(HOME)/fdr -g -DLINUX
+PREFIX ?= /cs/faculty/rich/cs170
+#PREFIX ?= ./build
 KHOME=$(PREFIX)/lib
 KINC=$(PREFIX)/include
 
@@ -31,7 +31,7 @@ $(KHOME)libkt.a: ${OBJECT-FILES}
 
 
 clean:
-	rm ${EXECUTABLES} ${OBJECT-FILES} test_kt.o
+	rm -f ${EXECUTABLES} ${OBJECT-FILES} test_kt.o
 
 depend:
 	makedepend *.c
