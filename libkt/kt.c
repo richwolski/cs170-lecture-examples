@@ -37,14 +37,12 @@
 
 #ifdef LINUX
 
-#if defined(__x86_64__)
 /*
- * maintain 32-bit compat with 64-bit; define a type representing
- * register size. don't use size_t / ssize_t because type names won't
- * play nice with the jrb_* functions
+ * key insight here is to recognize that long's are 4 bytes on 32-bit and
+ * 8 on 64, so we can use them interchangeably as lossless integral
+ * pointer representations.
  */
-#define REGTYPE        long
-
+#if defined(__x86_64__)
 /* from glibc v2.37 source code, file: sysdeps/x86_64/jmpbuf-offsets.h */
 #define JB_RBX	0
 #define JB_BP	1 /* changed from JB_RBP for compat */
@@ -57,7 +55,6 @@
 #define JB_SIZE (8*8)
 
 #elif defined(__i386__)
-#define REGTYPE        int
 #ifndef JB_BP /* in libc >= 3.5 they hide JB_* and mangle SP */
 #define	JB_BP 3
 #define	JB_SP 4
@@ -76,13 +73,10 @@
                                          : "0" (var), \
 					   "i" (24))
 #elif defined(__x86_64__)
-//#include <stdint.h>
-//extern __attribute__ ((section (".data.rel.ro"))) uintptr_t __pointer_chk_guard_local;
-
 #define LP_SIZE "8"
 #define POINTER_GUARD           (48) /* offsetof (tcbhead_t, pointer_guard),
                                       * see sysdeps/x86_64/nptl/tls.h and
-                                      * sysdeps/x86_64/nptl/tls.h
+                                      * sysdeps/x86_64/nptl/tcb-offsets.sym
                                       */
 /* used outside of the glibc RTLD (dynamic linker) module.
  * see sysdeps/unix/sysv/linux/x86_64/pointer_guard.h */
@@ -110,14 +104,6 @@
 #define JB_FP (3)
 #endif
 
-#ifndef __CONCAT /* newer GCC defines this for us in <cdefs.h> */
-#define __CONCAT(s1, s2)        s1 ## s2
-#endif
-#define CONCAT(s1, s2)          __CONCAT(s1, s2)
-
-#define jrb_insert_regt         CONCAT(jrb_insert_, REGTYPE)
-#define jrb_find_regt           CONCAT(jrb_find_, REGTYPE)
-
 #include "kdebug.h"
 #include "kt.h"
 
@@ -134,14 +120,14 @@ typedef struct kt_sem_str *Ksem;
 struct kt_sem_str
 {
 	int val;		/* The value */
-        REGTYPE sid;		/* Unique id */
+        long sid;		/* Unique id */
 };
 
 struct kt_str
 {
 	void *(*func)(void *);	/* function to call */
 	void *arg;		/* arg to pass that function */
-        REGTYPE tid;                /* Unique thread id */
+        long tid;                /* Unique thread id */
 	int state;		/* queue state */
 	JRB blocked_list;	/* list I'm blocked on */
 	JRB blocked_list_ptr;	/* pointer to my node on the list */
@@ -149,7 +135,7 @@ struct kt_str
 	jmp_buf exitbuf;	/* stack/PC state for immediate exit */
 	char *stack;		/* stack pointer */
 	ssize_t stack_size;	/* stack_size */
-	unsigned REGTYPE wake_time; /* if I'm sleeping, should I wake now? */
+	unsigned long wake_time; /* if I'm sleeping, should I wake now? */
 	int die_now;
 	Ksem ks;		/* in case I get killed */
 };
@@ -165,10 +151,10 @@ static JRB ktSleeping;			/* waiting for Godot */
 static JRB ktActive;			/* searchable list of active threads */
 
 static size_t ktThread_count;
-static REGTYPE ktTidCounter;
-static REGTYPE ktSidCounter;
+static long ktTidCounter;
+static long ktSidCounter;
 
-static REGTYPE KtInit_d = 0;
+static long KtInit_d = 0;
 
 static K_t ktOriginal;			/* global for main thread */
 
@@ -221,7 +207,7 @@ K_t InitKThread(ssize_t stack_size, void *(*func)(void *), void *arg)
 	/*
 	 * keep track of all threads int he system
 	 */
-	jrb_insert_regt(ktActive,kt->tid,new_jval_v(kt));
+	jrb_insert_long(ktActive,kt->tid,new_jval_v(kt));
 
 	return(kt);
 }
@@ -312,22 +298,22 @@ WakeKThread(K_t kt)
 }
 
 void
-BlockKThread(K_t kt, REGTYPE key)
+BlockKThread(K_t kt, long key)
 {
 	kt->state = BLOCKED;
 	kt->blocked_list = ktBlocked;
-	kt->blocked_list_ptr = jrb_insert_regt(ktBlocked,key,new_jval_v(kt));
+	kt->blocked_list_ptr = jrb_insert_long(ktBlocked,key,new_jval_v(kt));
 	return;
 }
 
 
 void
-SleepKThread(K_t kt, REGTYPE until)
+SleepKThread(K_t kt, long until)
 {
 	kt->state = SLEEPING;
 	kt->blocked_list = ktSleeping;
 	kt->wake_time = until;
-	kt->blocked_list_ptr = jrb_insert_regt(ktSleeping,until,new_jval_v(kt));
+	kt->blocked_list_ptr = jrb_insert_long(ktSleeping,until,new_jval_v(kt));
 	return;
 }
 
@@ -350,8 +336,8 @@ KtSched()
 {
 	K_t kt;
 	JRB jb;
-	unsigned REGTYPE sp;
-	unsigned REGTYPE now;
+	unsigned long sp;
+	unsigned long now;
         JRB tmp;
         Dllist dtmp;
 
@@ -420,7 +406,7 @@ start:
 		/*
 		 * next, see if there is a joinall thread waiting
 		 */
-		jb = jrb_find_regt(ktBlocked,0);
+		jb = jrb_find_long(ktBlocked,0);
 		if(jb != NULL)
 		{
 			WakeKThread((K_t)jval_v(jrb_val(jb)));
@@ -476,16 +462,16 @@ start:
 			 * get double word aligned SP -- stacks grow from high
 			 * to low
 			 */
-			sp = (unsigned REGTYPE)&((kt->stack[kt->stack_size - 1]));
-			while((sp % (2 * sizeof(REGTYPE))) != 0)
+			sp = (unsigned long)&((kt->stack[kt->stack_size - 1]));
+			while((sp % (2 * sizeof(long))) != 0)
 				sp--;
 #ifdef LINUX
 			/*
 			 * keep double word aligned but put in enough
 			 * space to handle local variables for KtSched
 			 */
-			kt->jmpbuf->__jmpbuf[JB_BP] = (REGTYPE)sp;
-			kt->jmpbuf->__jmpbuf[JB_SP] = (REGTYPE)sp-1024;
+			kt->jmpbuf->__jmpbuf[JB_BP] = (long)sp;
+			kt->jmpbuf->__jmpbuf[JB_SP] = (long)sp-1024;
 			PTR_MANGLE(kt->jmpbuf->__jmpbuf[JB_SP]);
 #ifdef __x86_64__
                         PTR_MANGLE(kt->jmpbuf->__jmpbuf[JB_BP]);
@@ -544,7 +530,7 @@ start:
 			 * make it inactive
 			 */
 
-			jb = jrb_find_regt(ktActive,ktRunning->tid);
+			jb = jrb_find_long(ktActive,ktRunning->tid);
 			if(jb == NULL)
 			{
 				if(Debug & KT_DEBUG)
@@ -561,7 +547,7 @@ start:
 			 * look to see if there is a thread waiting for this
 			 * one to exit -- careful with locals
 			 */
-			jb = jrb_find_regt(ktBlocked,ktRunning->tid);
+			jb = jrb_find_long(ktBlocked,ktRunning->tid);
 			if(jb != NULL)
 			{
 				WakeKThread((K_t)jval_v(jrb_val(jb)));
@@ -628,11 +614,11 @@ kt_join(void *i_join)
 {
 	K_t me;
 	JRB target;
-        REGTYPE tid;
+        long tid;
 
 	InitKThreadSystem();
 
-        tid = (REGTYPE) i_join;
+        tid = (long) i_join;
 
         if (tid <= 0) {
           fprintf(stderr, "kt_join() -- bad argument\n");
@@ -643,7 +629,7 @@ kt_join(void *i_join)
 	 * see if the thread I want to wait for exists
 	 */
 
-	target = jrb_find_regt(ktActive,tid);
+	target = jrb_find_long(ktActive,tid);
 
 	/*
 	 * if not, we assume that the thread is dead, and simply return.
@@ -652,7 +638,7 @@ kt_join(void *i_join)
 	 */
 	if(target == NULL) return;
 
-        if (jrb_find_regt(ktBlocked, tid) != NULL) {
+        if (jrb_find_long(ktBlocked, tid) != NULL) {
           fprintf(stderr, "Called kt_join on a thread twice\n");
           exit(1);
         }
@@ -676,7 +662,7 @@ kt_joinall()
         /* Jim: I'm changing semantics.  If there is already
            a joinall thread, flag it as an error */
 
-	if(jrb_find_regt(ktBlocked,0) != NULL)
+	if(jrb_find_long(ktBlocked,0) != NULL)
 	{
           fprintf(stderr, "Error: two joinall threads\n");
           exit(1);
@@ -728,7 +714,7 @@ void kt_exit()
           ktRunning->state = DEAD;
 
           /* Nuke it from ktActive */
-          tmp = jrb_find_regt(ktActive, ktRunning->tid);
+          tmp = jrb_find_long(ktActive, ktRunning->tid);
           if (tmp == NULL) {
             fprintf(stderr, "Panic: Original thread not in ktActive\n");
             exit(1);
@@ -737,7 +723,7 @@ void kt_exit()
 
           /* If there is a thread waiting on me, wake it up */
 
-          tmp = jrb_find_regt(ktBlocked, ktRunning->tid);
+          tmp = jrb_find_long(ktBlocked, ktRunning->tid);
           if (tmp != NULL) {
             WakeKThread((K_t)tmp->val.v);
           }
@@ -798,7 +784,7 @@ void kill_kt_sem(kt_sem iks)
 	/*
 	 * if there are threads blocked on this semaphore, panic
 	 */
-	if(jrb_find_regt(ktBlocked,ks->sid) != NULL)
+	if(jrb_find_long(ktBlocked,ks->sid) != NULL)
 	{
 		if(Debug & KT_DEBUG)
 		{
@@ -850,7 +836,7 @@ void V_kt_sem(kt_sem iks)
 
 	if(ks->val <= 0)
 	{
-		wake_kt = jval_v(jrb_val(jrb_find_regt(ktBlocked,ks->sid)));
+		wake_kt = jval_v(jrb_val(jrb_find_long(ktBlocked,ks->sid)));
 		WakeKThread(wake_kt);
 	}
 
@@ -893,12 +879,12 @@ int kt_getval(kt_sem s)
 void kt_kill(void *t)
 {
 	K_t kt;
-        REGTYPE tid;
+        long tid;
         JRB tmp;
 
-        tid = (REGTYPE) t;
+        tid = (long) t;
 
-        tmp = jrb_find_regt(ktActive, tid);
+        tmp = jrb_find_long(ktActive, tid);
 
         /* Hell, this might not be right either.  If the thread
            is not in the active tree, then assume it's dead */
