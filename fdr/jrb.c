@@ -3,7 +3,6 @@
 /* Original code by Jim Plank (plank@cs.utk.edu) */
 /* modified for THINK C 6.0 for Macintosh by Chris Bartley */
  
-#include <unistd.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -200,7 +199,41 @@ JRB jrb_find_int(JRB n, int ikey)
   j = jrb_find_gte_int(n, ikey, &fnd);
   if (fnd) return j; else return NULL;
 }
- 
+
+JRB jrb_find_gte_long(JRB n, long lkey, int *fnd)
+{
+  *fnd = 0;
+  if (!ishead(n)) {
+    fprintf(stderr, "jrb_find_gte_long called on non-head 0x%x\n", n);
+    exit(1);
+  }
+  if (n->parent == n) return n;
+  if (lkey == n->blink->key.l) {
+    *fnd = 1;
+    return n->blink;
+  }
+  if (lkey > n->blink->key.l) return n;
+  else n = n->parent;
+  while (1) {
+    if (isext(n)) return n;
+    if (lkey == getlext(n)->key.l) {
+      *fnd = 1;
+      return getlext(n);
+    }
+    n = (lkey < getlext(n)->key.l) ? n->flink : n->blink;
+  }
+}
+
+extern JRB jrb_find_long(JRB n, long lkey)
+{
+  int fnd;
+  JRB j;
+
+  j = jrb_find_gte_long(n, lkey, &fnd);
+  if (fnd) return j; else return NULL;
+}
+
+
 JRB jrb_find_gte_dbl(JRB n, double dkey, int *fnd)
 {
   *fnd = 0;
@@ -641,6 +674,15 @@ JRB jrb_insert_int(JRB tree, int ikey, Jval val)
   return jrb_insert_b(jrb_find_gte_int(tree, ikey, &fnd), k, val);
 }
 
+JRB jrb_insert_long(JRB tree, long lkey, Jval val)
+{
+  Jval k;
+  int fnd;
+
+  k.l = lkey;
+  return jrb_insert_b(jrb_find_gte_long(tree, lkey, &fnd), k, val);
+}
+
 JRB jrb_insert_dbl(JRB tree, double dkey, Jval val)
 {
   Jval k;
@@ -657,5 +699,4 @@ JRB jrb_insert_gen(JRB tree, Jval key, Jval val,
 
   return jrb_insert_b(jrb_find_gte_gen(tree, key, func, &fnd), key, val);
 }
-
 
