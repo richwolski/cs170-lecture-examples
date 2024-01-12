@@ -1,6 +1,8 @@
 #include "kos_world.h"
 #include "kt.h"
 
+#include <time.h>
+
 #define FORKCOUNT (3)
 #define PCOUNT (5000)
 
