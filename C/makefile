@@ -5,6 +5,7 @@ EXECUTABLES = p1 p2 p3 p4 pointer1 pointer2 pointer-array pointer-pointer in-out
 CFLAGS = -g
 
 all: $(EXECUTABLES)
+	chmod 755 $(EXECUTABLES)
 
 clean:
 	rm -f core *.o $(EXECUTABLES) a.out *.a
