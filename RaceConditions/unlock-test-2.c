@@ -46,7 +46,7 @@ void *Thread_3(void *arg)
 {
 	int err;
 	int i;
-	int j =;
+	int j = 0;
 
 	printf("Thread_3 sleeping\n");
 	for(i=0; i < 500000000; i++) {
