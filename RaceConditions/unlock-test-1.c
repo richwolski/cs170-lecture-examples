@@ -53,7 +53,7 @@ void *Thread_3(void *arg)
 	}
 	printf("Thread_3 awake and calling unlock\n");
 	err = pthread_mutex_unlock(&Lock);
-	printf("Thread_3  got %d from unlock, exiting\n",err);
+	printf("Thread_3 got %d from unlock, exiting\n",err);
 	pthread_exit(NULL);
 	return(NULL);
 }
