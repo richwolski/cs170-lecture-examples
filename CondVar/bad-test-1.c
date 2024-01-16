@@ -4,8 +4,7 @@
 #include <pthread.h>
 
 int Counter = 0;
-pthread_mutex_t Lock1;
-pthread_mutex_t Lock2;
+pthread_mutex_t Lock;
 int MyTurn = 1;
 
 void *Thread_1(void *arg)
@@ -13,14 +12,16 @@ void *Thread_1(void *arg)
 	int i;
 	int j;
 
-	pthread_mutex_lock(&Lock2);
+	pthread_mutex_lock(&Lock);
 	if(MyTurn == 2) {
-		printf("Thread_1: it is NOT my turn, MyTurn: %d\n",MyTurn);
-		pthread_mutex_lock(&Lock1);
+		pthread_mutex_unlock(&Lock);
+		for(j=0; j < 800000; j++);
+		printf("Thread_1: not my turn, MyTurn: %d\n",MyTurn);
+		return(NULL);
 	}
 	printf("Thread_1: it IS my turn, MyTurn: %d\n",MyTurn);
 	MyTurn = 2;
-	pthread_mutex_unlock(&Lock2);
+	pthread_mutex_unlock(&Lock);
 	return(NULL);
 }
 
@@ -29,21 +30,21 @@ void *Thread_2(void *arg)
 	int i;
 	int j;
 
-	pthread_mutex_lock(&Lock1);
+	pthread_mutex_lock(&Lock);
 	if(MyTurn == 1) {
-		printf("Thread_2: it is NOT my turn, MyTurn: %d\n",MyTurn);
-		pthread_mutex_lock(&Lock2);
+		pthread_mutex_unlock(&Lock);
+		printf("Thread_2: not my turn, MyTurn: %d\n",MyTurn);
+		return(NULL);
 	}
-	printf("Thread_2: it IS my turn, MyTurn: %d\n",MyTurn);
+	printf("Thread_2: it IS my turn: MyTurn: %d\n",MyTurn);
 	MyTurn = 1;
-	pthread_mutex_unlock(&Lock1);
+	pthread_mutex_unlock(&Lock);
 	return(NULL);
 }
 
 int main(int argc, char **argv)
 {
-	pthread_mutex_init(&Lock1,NULL);
-	pthread_mutex_init(&Lock2,NULL);
+	pthread_mutex_init(&Lock,NULL);
 	pthread_t t1;
 	pthread_t t2;
 	int iterations;
