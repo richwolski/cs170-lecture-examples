@@ -60,6 +60,7 @@ void *Thread_3(void *arg)
 
 int main(int argc, char **argv)
 {
+	pthread_mutex_init(&Lock,NULL);
 	printf("main launching threads\n");
 	(void)pthread_create(&T1,NULL,Thread_1,NULL);
 	(void)pthread_create(&T2,NULL,Thread_2,NULL);
