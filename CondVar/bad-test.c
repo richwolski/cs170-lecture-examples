@@ -21,7 +21,6 @@ void *Thread_1(void *arg)
 		pthread_mutex_unlock(&Lock0); // exit critical section
 		pthread_mutex_lock(&Lock1);
 	// awake! reenter critical section
-	        for(i=0; i < 1000000; i++);
         	pthread_mutex_lock(&Lock0);
 		printf("Thread_1: awake! MyTurn: %d\n",MyTurn);
 	} 
