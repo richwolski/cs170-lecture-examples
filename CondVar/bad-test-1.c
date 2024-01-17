@@ -26,6 +26,9 @@ void *Thread_1(void *arg)
 		printf("Thread_1: it is NOT my turn, MyTurn: %d\n",MyTurn);
 		pthread_mutex_unlock(&Lock2); // unlock the other
 		pthread_mutex_unlock(&Lock0); // exit critical section
+for(i=0; i < 10000000; i++) {
+j++;
+}
 		pthread_mutex_lock(&Lock1);
 	// awake! reenter critical section
         	pthread_mutex_lock(&Lock0);
@@ -44,6 +47,7 @@ void *Thread_2(void *arg)
 	int i;
 	int j;
 
+	printf("Thread_2 starting\n");
 	pthread_mutex_lock(&Lock0);
 	pthread_mutex_lock(&Lock1);
 	if(MyTurn == 1) {
@@ -58,6 +62,7 @@ void *Thread_2(void *arg)
 	MyTurn = 1;
 	pthread_mutex_unlock(&Lock1);
 	pthread_mutex_unlock(&Lock0);
+	printf("Thread_2 exiting\n");
 	return(NULL);
 }
 
