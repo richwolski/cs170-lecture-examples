@@ -25,7 +25,7 @@ extern Jval new_jval_i(int);
 extern Jval new_jval_l(long);
 extern Jval new_jval_f(float);
 extern Jval new_jval_d(double);
-extern Jval new_jval_v(/* void */);
+extern Jval new_jval_v(void *v);
 extern Jval new_jval_s(char *);
 extern Jval new_jval_c(char);
 extern Jval new_jval_uc(unsigned char);

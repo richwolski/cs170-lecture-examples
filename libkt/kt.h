@@ -92,7 +92,7 @@ void kt_yield();
  */
 void kt_kill(void *t);
 
-#include <stdint.h>
-extern uintptr_t __pointer_chk_guard_local();
+//#include <stdint.h>
+//extern uintptr_t __pointer_chk_guard_local();
 #endif
 
