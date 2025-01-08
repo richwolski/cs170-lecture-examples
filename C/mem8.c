@@ -24,7 +24,7 @@ void foo(int *param_a)
 	if(local_p == global_p) {
 		printf("local_p and global_p are equal\n");
 	} else {
-		printf("local_p and global_p are equal\n");
+		printf("local_p and global_p are not equal\n");
 	}
 
 	free(local_p);
