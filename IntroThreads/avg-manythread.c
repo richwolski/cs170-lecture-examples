@@ -101,6 +101,8 @@ int main(int argc, char **argv)
 	struct result_struct *result;
 	int err;
 	pthread_t *thread_ids;
+	int extra;
+	int tsize;
 	int range_size;
 	int index;
 
@@ -169,14 +171,8 @@ int main(int argc, char **argv)
 	 * first, divide the list size by the number of threads to get an even
 	 * distribution of work.
 	 */
-	range_size = (count / threads) + 1;
-
-	/*
-	 * handle the possibility that #threads# divides #count# evenly
-	 */
-	if(((range_size-1) * threads) == count) {
-		range_size -= 1;
-	}
+	range_size = (count / threads);
+	extra = (count % threads);
 
 	printf("main thread about to create %d sum threads\n",
 			threads);
@@ -204,19 +200,16 @@ int main(int argc, char **argv)
 		 * data array
 		 */
 		args->size = range_size;
+		if(extra > 0) {
+			args->size += 1;
+			extra -= 1;
+		}
+		tsize = args->size; // remember how much we gave this thread
 		args->data = data;
 		/*
 		 * set the starting and ending index for the next thread
 		 */
 		args->starting_i = index;
-		/*
-		 * sanity chek to make sure we don't go out of bounds on the
-		 * last thread in the case there #count# does not divide
-		 * evenly
-		 */
-		if((args->starting_i + args->size) > count) {
-			args->size = count - args->starting_i;
-		}
 		printf("main thread creating sum thread %d\n",
 			t+1);
 		fflush(stdout);
@@ -235,7 +228,7 @@ int main(int argc, char **argv)
 		/*
 		 * set the starting index for the next thread
 		 */
-		index += range_size;
+		index += tsize; // bump forward to next thread range
 	}
 
 	/*
