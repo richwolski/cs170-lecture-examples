@@ -8,6 +8,8 @@
  */
 
 
+#include <unistd.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <pthread.h>
 #include "dphil.h"

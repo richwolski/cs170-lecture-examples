@@ -10,14 +10,14 @@ typedef struct dllist {
 } *Dllist;
 
 extern Dllist new_dllist();
-extern free_dllist(Dllist);
+extern void free_dllist(Dllist);
 
-extern dll_append(Dllist, Jval);
-extern dll_prepend(Dllist, Jval);
-extern dll_insert_b(Dllist, Jval);
-extern dll_insert_a(Dllist, Jval);
+extern void dll_append(Dllist, Jval);
+extern void dll_prepend(Dllist, Jval);
+extern void dll_insert_b(Dllist, Jval);
+extern void dll_insert_a(Dllist, Jval);
 
-extern dll_delete_node(Dllist);
+extern void dll_delete_node(Dllist);
 extern int dll_empty(Dllist);
 
 extern Jval dll_val(Dllist);

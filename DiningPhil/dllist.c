@@ -1,4 +1,5 @@
 #include <stdio.h>    /* Basic includes and definitions */
+#include <stdlib.h>
 #include "dllist.h"
 
 /*---------------------------------------------------------------------*
@@ -18,48 +19,48 @@ Dllist new_dllist()
   return d;
 }
  
-dll_insert_b(Dllist node, Jval v)       /* Inserts before a given node */
+void dll_insert_b(Dllist node, Jval v)       /* Inserts before a given node */
 {
-  Dllist new;
+  Dllist newnode;
 
-  new = (Dllist) malloc (sizeof(struct dllist));
-  new->val = v;
+  newnode = (Dllist) malloc (sizeof(struct dllist));
+  newnode->val = v;
 
-  new->flink = node;
-  new->blink = node->blink;
-  new->flink->blink = new;
-  new->blink->flink = new;
+  newnode->flink = node;
+  newnode->blink = node->blink;
+  newnode->flink->blink = newnode;
+  newnode->blink->flink = newnode;
 }
 
-dll_insert_a(Dllist n, Jval val)        /* Inserts after a given node */
+void dll_insert_a(Dllist n, Jval val)        /* Inserts after a given node */
 {
   dll_insert_b(n->flink, val);
 }
 
-dll_append(Dllist l, Jval val)     /* Inserts at the end of the list */
+void dll_append(Dllist l, Jval val)     /* Inserts at the end of the list */
 {
   dll_insert_b(l, val);
 }
 
-dll_prepend(Dllist l, Jval val)    /* Inserts at the beginning of the list */
+void dll_prepend(Dllist l, Jval val)    /* Inserts at the beginning of the list */
 {
   dll_insert_b(l->flink, val);
 }
 
 
-dll_delete_node(Dllist node)		/* Deletes an arbitrary iterm */
+void dll_delete_node(Dllist node)		/* Deletes an arbitrary iterm */
 {
   node->flink->blink = node->blink;
   node->blink->flink = node->flink;
   free(node);
 }
 
-dll_empty(Dllist l)
+int dll_empty(Dllist l)
 {
   return (l->flink == l);
 }
  
-free_dllist(Dllist l)
+void free_dllist(Dllist l)
 {
   while (!dll_empty(l)) {
     dll_delete_node(dll_first(l));
@@ -70,21 +71,5 @@ free_dllist(Dllist l)
 Jval dll_val(Dllist l)
 {
   return l->val;
-}
-
-int dll_size(Dllist l)
-{
-	int count;
-	Dllist curr;
-	
-	curr = l->flink;
-	count = 0;
-	while(curr != l)
-	{
-		count++;
-		curr = curr->flink;
-	}
-	
-	return(count);
 }
 

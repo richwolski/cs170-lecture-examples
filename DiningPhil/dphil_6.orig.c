@@ -30,7 +30,7 @@ typedef struct {
 
 /* It is assumed that you have locked pp->mon */
 
-int test_queue(void *v)
+test_queue(void *v)
 {
   int id;
   int phil_count;
@@ -55,7 +55,6 @@ void pickup(Phil_struct *ps)
 {
   Phil *pp;
   int phil_count;
-  Dllist node;
 
   pp = (Phil *) ps->v;
   phil_count = pp->phil_count;
@@ -66,17 +65,8 @@ void pickup(Phil_struct *ps)
                      pp->state[(ps->id+(phil_count-1))%phil_count] != EATING) {
     pp->state[ps->id] = EATING;
   } else {
-    /*
-     * technically, we don't need to retest because each Phil has its own
-     * cond variable and signal must wake up at least 1.  A spurious wake up,
-     * though, would cause a problem
-     */
     dll_append(pp->q, new_jval_i(ps->id)); /* put me on the queue */
-    node = dll_last(pp->q);
-    while((node != dll_first(pp->q)) || (pp->state[((ps->id+1))%phil_count] == EATING) ||
-          (pp->state[(ps->id+(phil_count-1))%phil_count] == EATING)) {
-    	pthread_cond_wait(pp->cv[ps->id], pp->mon);
-    }
+    pthread_cond_wait(pp->cv[ps->id], pp->mon);
     dll_delete_node(pp->q->flink); /* I must be at the head of the queue */
     pp->state[ps->id] = EATING;
     test_queue(ps->v); /* signal head of the queue if neighbors aren't eating */

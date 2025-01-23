@@ -5,7 +5,8 @@
  */
 
 
-#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
 #include <lwp/lwp.h>
 #include <lwp/check.h>
 #include <lwp/lwpmachdep.h>

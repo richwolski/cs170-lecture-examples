@@ -6,7 +6,10 @@
  */
 
 
+#include <unistd.h>
+#include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <pthread.h>
 #include "dphil.h"
 
@@ -59,9 +62,7 @@ void *philosopher(void *v)
   }
 }
 
-main(argc, argv)
-int argc; 
-char **argv;
+int main(int argc, char **argv)
 {
   int i;
   pthread_t threads[MAXTHREADS];
