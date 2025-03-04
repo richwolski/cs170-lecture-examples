@@ -6,6 +6,7 @@
 #include <sys/wait.h>
 #include <time.h>
 #include <errno.h>
+#include <signal.h>
 
 #define PIPESIZE (1024*64)
 #define WRITESIZE (16)
@@ -26,6 +27,7 @@ int main(int argc, char **argv, char **envp)
 	int j;
 	
 
+	signal(SIGPIPE,SIG_IGN);
 	err = pipe(pd);
 	if(err < 0) {
 		perror("pipe ");
@@ -45,12 +47,18 @@ int main(int argc, char **argv, char **envp)
 		fflush(stdout);
 		memset(read_buffer,0,sizeof(read_buffer));
 		size = read(pd[0],read_buffer,sizeof(read_buffer));
+		i = 0;
 		while(size > 0) {
 			printf("%c",read_buffer[0]);
 			fflush(stdout);
 			nanosleep(&req,NULL);
 			memset(read_buffer,0,sizeof(read_buffer));
 			size = read(pd[0],read_buffer,sizeof(read_buffer));
+			i++;
+			//if(i > 32) {
+			//	close(pd[0]);
+			//	exit(0);
+			//}
 		}
 		if(size < 0) {
 			perror("read error ");
@@ -79,6 +87,8 @@ int main(int argc, char **argv, char **envp)
 		while(i < (2*PIPESIZE)) {
 			err = write(pd[1],&write_buffer[i],WRITESIZE);
 			if(err != WRITESIZE) {
+				printf("write return %d\n",err);
+				fflush(stdout);
 				perror("pipe write ");
 				exit(1);
 			}
