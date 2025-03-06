@@ -41,6 +41,7 @@ int main(int argc, char **argv, char **envp)
 			printf("pid: %d read (%d bytes) %s\n",getpid(),size,
 				read_buffer);
 			fflush(stdout);
+			fflush(stdout);
 			memset(read_buffer,0,sizeof(read_buffer));
 			size = read(pd[0],read_buffer,sizeof(read_buffer));
 		}
@@ -49,28 +50,33 @@ int main(int argc, char **argv, char **envp)
 			exit(1);
 		}
 		printf("pid: %d exiting\n",getpid());
+		fflush(stdout);
 		exit(0);
 	} else {
 		close(pd[0]);
 		// first do two writes in succession
 		printf("pid: %d first write of %s\n",getpid(),"12345");
+		fflush(stdout);
 		err = write(pd[1],"12345",strlen("12345"));
 		if(err != strlen("12345")) {
 			perror("pipe write 1 ");
 			exit(1);
 		}
 		printf("pid: %d second write of %s\n",getpid(),"678910");
+		fflush(stdout);
 		err = write(pd[1],"678910",strlen("678910"));
 		if(err != strlen("678910")) {
 			perror("pipe write 1 ");
 			exit(1);
 		}
 		printf("pid: %d two writes done\n",getpid());
+		fflush(stdout);
 
-		sleep(1);
+		//sleep(1);
 
 		// now two two writes separated by a sleep
 		printf("pid: %d third write of %s\n",getpid(),"abcdefg");
+		fflush(stdout);
 		err = write(pd[1],"abcdefg",strlen("abcdefg"));
 		if(err != strlen("abcdefg")) {
 			perror("pipe write 3 ");
@@ -80,19 +86,22 @@ int main(int argc, char **argv, char **envp)
 		req.tv_sec = 0;
 		req.tv_nsec = 500000000; //500 ms
 		//req.tv_nsec = 10000; //0.1 ms
-		nanosleep(&req,NULL);
+		//nanosleep(&req,NULL);
 
 		printf("pid: %d fourth write of %s\n",getpid(),"hijklm");
+		fflush(stdout);
 		err = write(pd[1],"hijklm",strlen("hijklm"));
 		if(err != strlen("hijklm")) {
 			perror("pipe write 4 ");
 			exit(1);
 		}
 		printf("pid: %d writes three and four done\n",getpid());
+		fflush(stdout);
 
 		close(pd[1]);
 		pid = wait(NULL);
 		printf("pid: %d wait done exiting\n",getpid());
+		fflush(stdout);
 		exit(0);
 	}
 
