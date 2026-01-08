@@ -40,6 +40,7 @@ int main(int argc, char **argv, char **envp)
 		close(pd[1]);
 		req.tv_sec = 0;
 		req.tv_nsec = (50000000*2); // 100ms
+		//req.tv_nsec = (50000*2); // 0.1ms
 		printf("pid: %d before reads\n",getpid());
 		fflush(stdout);
 		memset(read_buffer,0,sizeof(read_buffer));

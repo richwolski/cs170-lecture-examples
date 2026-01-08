@@ -13,7 +13,7 @@ int main(int argc, char **argv)
 	pid_t my_id;
 	int pipe_desc[2];
 	char *string;
-	char read_buffer[4096];
+	char read_buffer[5];
 	int err;
 
 	/*

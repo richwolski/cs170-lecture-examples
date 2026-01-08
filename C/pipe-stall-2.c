@@ -39,10 +39,12 @@ int main(int argc, char **argv, char **envp)
 		perror("fork: ");
 		exit(1);
 	}
+	// reader
 	if(pid == 0) {
 		close(pd[1]);
 		req.tv_sec = 0;
-		req.tv_nsec = (50000000*2); // 100ms
+		//req.tv_nsec = (50000000*2); // 100ms
+		req.tv_nsec = (50000*2); // 0.1ms
 		printf("pid: %d before reads\n",getpid());
 		fflush(stdout);
 		memset(read_buffer,0,sizeof(read_buffer));
@@ -55,10 +57,10 @@ int main(int argc, char **argv, char **envp)
 			memset(read_buffer,0,sizeof(read_buffer));
 			size = read(pd[0],read_buffer,sizeof(read_buffer));
 			i++;
-			//if(i > 32) {
-			//	close(pd[0]);
-			//	exit(0);
-			//}
+			if(i > 32) {
+				close(pd[0]);
+				exit(0);
+			}
 		}
 		if(size < 0) {
 			perror("read error ");
@@ -69,7 +71,7 @@ int main(int argc, char **argv, char **envp)
 		printf("pid: %d after reads\n",getpid());
 		fflush(stdout);
 		exit(0);
-	} else {
+	} else { // writer
 		close(pd[0]);
 		// first do two writes in succession
 		j = 0;

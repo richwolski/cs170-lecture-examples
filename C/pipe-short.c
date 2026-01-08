@@ -72,7 +72,7 @@ int main(int argc, char **argv, char **envp)
 		printf("pid: %d two writes done\n",getpid());
 		fflush(stdout);
 
-		//sleep(1);
+		sleep(1);
 
 		// now two two writes separated by a sleep
 		printf("pid: %d third write of %s\n",getpid(),"abcdefg");
@@ -84,9 +84,9 @@ int main(int argc, char **argv, char **envp)
 		}
 	
 		req.tv_sec = 0;
-		req.tv_nsec = 500000000; //500 ms
-		//req.tv_nsec = 10000; //0.1 ms
-		//nanosleep(&req,NULL);
+		//req.tv_nsec = 500000000; //500 ms
+		req.tv_nsec = 10000; //0.1 ms
+		nanosleep(&req,NULL);
 
 		printf("pid: %d fourth write of %s\n",getpid(),"hijklm");
 		fflush(stdout);

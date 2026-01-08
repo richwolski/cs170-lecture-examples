@@ -16,12 +16,12 @@ main(int argc, char *argv[])
 	int i_stack;
 	double d_stack;
 	int *i;
-	int *d;
+	double *d;
 	void *m1;
 	void *m2;
 
 	/*
-	 * first pint the pointers at the global variables
+	 * first point the pointers at the global variables
 	 */
 	i = &I_global;
 	d = &D_global;
@@ -67,7 +67,7 @@ main(int argc, char *argv[])
 	 * using a cast
 	 */
 	i = (int *)m1;
-	d = (int *)m2;
+	d = (double *)m2;
 
 	/*
 	 * store another set of different values
