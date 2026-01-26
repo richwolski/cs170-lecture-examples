@@ -249,7 +249,7 @@ void *TraderThread(void *arg)
 		 */
 		if(*(ta->done) == 1) {
 			V_kt_sem(ta->order_que->empty);
-			kt_exit();
+			kt_exit(NULL);
 		}
 		/*
 		 * get the next order
