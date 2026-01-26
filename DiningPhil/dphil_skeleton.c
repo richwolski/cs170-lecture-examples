@@ -62,11 +62,12 @@ void *philosopher(void *v)
   }
 }
 
+Phil_struct ps[MAXTHREADS];
+
 int main(int argc, char **argv)
 {
   int i;
   pthread_t threads[MAXTHREADS];
-  Phil_struct ps[MAXTHREADS];
   void *v;
   long t0;
   pthread_mutex_t *blockmon;

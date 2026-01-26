@@ -12,4 +12,4 @@ extern void *initialize_state(int phil_count);
 extern void pickup(Phil_struct *);
 extern void putdown(Phil_struct *);
 
-#define MAXTHREADS (25)
+#define MAXTHREADS (512)
