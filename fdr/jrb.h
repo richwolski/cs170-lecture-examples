@@ -33,6 +33,7 @@ extern JRB make_jrb();   /* Creates a new rb-tree */
 
 extern JRB jrb_insert_str(JRB tree, char *key, Jval val);
 extern JRB jrb_insert_int(JRB tree, int ikey, Jval val);
+extern JRB jrb_insert_long(JRB tree, long lkey, Jval val);
 extern JRB jrb_insert_dbl(JRB tree, double dkey, Jval val);
 extern JRB jrb_insert_gen(JRB tree, Jval key, Jval val, int (*func)(Jval,Jval));
 
@@ -41,6 +42,7 @@ extern JRB jrb_insert_gen(JRB tree, Jval key, Jval val, int (*func)(Jval,Jval));
 
 extern JRB jrb_find_str(JRB root, char *key);
 extern JRB jrb_find_int(JRB root, int ikey);
+extern JRB jrb_find_long(JRB tree, long lkey);
 extern JRB jrb_find_dbl(JRB root, double dkey);
 extern JRB jrb_find_gen(JRB root, Jval, int (*func)(Jval, Jval));
 
@@ -51,6 +53,7 @@ extern JRB jrb_find_gen(JRB root, Jval, int (*func)(Jval, Jval));
 
 extern JRB jrb_find_gte_str(JRB root, char *key, int *found);
 extern JRB jrb_find_gte_int(JRB root, int ikey, int *found);
+extern JRB jrb_find_gte_long(JRB root, long lkey, int *found);
 extern JRB jrb_find_gte_dbl(JRB root, double dkey, int *found);
 extern JRB jrb_find_gte_gen(JRB root, Jval key, 
                               int (*func)(Jval, Jval), int *found);
@@ -88,3 +91,4 @@ int jrb_plength(JRB n);       /* returns the # of nodes in path from
   for(ptr = jrb_last(lst); ptr != jrb_nil(lst); ptr = jrb_prev(ptr))
  
 #endif
+
