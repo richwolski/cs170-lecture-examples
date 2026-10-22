@@ -12,6 +12,7 @@ int main(int argc, char **argv)
 {
 	pid_t child_id;
 	pid_t my_id;
+	pid_t wait_id;
 	int child_status;
 	int i;
 
@@ -24,9 +25,10 @@ int main(int argc, char **argv)
 		printf("pid: %d -- I am waiting for process %d to finish\n",
 			(int)my_id,
 			(int)child_id);
-		wait(&child_status);
-		printf("pid: %d -- my child has completed with status: %d\n",
+		wait_id = wait(&child_status);
+		printf("pid: %d -- my child %d has completed with status: %d\n",
 			(int)my_id,
+			(int)wait_id,
 			child_status);
 	} else {
 		my_id = getpid();
