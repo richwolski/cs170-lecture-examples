@@ -20,11 +20,13 @@ int main(int argc, char **argv)
 				printf("child: %d, parent: %d\n",getpid(),getppid());
 				sleep(1);
 			}
+			printf("child %d exiting\n",getpid());
 		} else {
 			for(i=0; i < 15; i++) {
 				printf("grandchild: %d, grandchild-parent: %d\n",getpid(),getppid());
 				sleep(1);
 			}
+			printf("grandchild %d exiting\n",getpid());
 		}
 	}
 	exit(0);
